@@ -1,0 +1,13 @@
+books_raw:
+  type: pandas.CSVDataset
+  filepath: abfs://python-ml-labs/01-raw/books.csv
+  credentials: blob_data
+  load_args:
+    on_bad_lines: warn
+    sep: ","
+
+books_loaded:
+  type: pandas.ParquetDataset
+  filepath: data/01_raw/books_loaded.parquet
+  save_args:
+    engine: pyarrow
