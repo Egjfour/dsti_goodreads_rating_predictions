@@ -11,3 +11,16 @@ books_loaded:
   filepath: data/01_raw/books_loaded.parquet
   save_args:
     engine: pyarrow
+
+# The following is in here twice so we can use it as both an input and output to the same node
+price_by_isbn_input:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/book_prices.parquet
+  save_args:
+    engine: pyarrow
+
+price_by_isbn:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/book_prices.parquet
+  save_args:
+    engine: pyarrow
