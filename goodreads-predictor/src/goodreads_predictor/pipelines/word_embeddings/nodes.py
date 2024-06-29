@@ -1,6 +1,6 @@
 # nodes.py
 
-from sentence_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer # pylint: disable=E0401
 
 def create_embeddings(books_loaded):
     model = SentenceTransformer('all-MiniLM-L6-v2')
