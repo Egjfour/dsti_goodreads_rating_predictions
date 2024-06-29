@@ -1,3 +1,4 @@
+
 books_raw:
   type: pandas.CSVDataset
   filepath: abfs://python-ml-labs/01-raw/books.csv
@@ -24,3 +25,13 @@ price_by_isbn:
   filepath: data/03_primary/book_prices.parquet
   save_args:
     engine: pyarrow
+
+books_embedded:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/books_embedded.parquet
+  save_args:
+    engine: pyarrow
+
+
+
+
