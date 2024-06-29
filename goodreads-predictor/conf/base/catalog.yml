@@ -13,8 +13,20 @@ books_loaded:
   save_args:
     engine: pyarrow
 
+# The following is in here twice so we can use it as both an input and output to the same node
+price_by_isbn_input:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/book_prices.parquet
+  save_args:
+    engine: pyarrow
 
-books_processed:
+price_by_isbn:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/book_prices.parquet
+  save_args:
+    engine: pyarrow
+
+books_embedded:
   type: pandas.ParquetDataset
   filepath: data/02_intermediate/books_embedded.parquet
   save_args:
