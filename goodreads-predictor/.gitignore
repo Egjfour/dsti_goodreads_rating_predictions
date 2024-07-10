@@ -13,6 +13,7 @@ data/**
 
 # except their sub-folders
 !data/**/
+!data/03_primary/book_prices.parquet
 
 # also keep all .gitkeep files
 !.gitkeep
@@ -150,5 +151,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-../goodreads_predictor_kedro
