@@ -32,6 +32,8 @@ books_embedded:
   save_args:
     engine: pyarrow
 
-
-
-
+huggingface_books_data_raw:
+  type: pandas.ParquetDataset
+  filepath: data/01_raw/book_description.parquet
+  save_args:
+    engine: pyarrow
