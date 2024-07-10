@@ -1,10 +1,10 @@
-"""
-This is a boilerplate pipeline 'word_embeddings'
-generated using Kedro 0.19.6
-"""
+# pipeline.py
 
-from kedro.pipeline import Pipeline, pipeline
+from kedro.pipeline import Pipeline, node
+from .nodes import create_embeddings
 
 
 def create_pipeline(**kwargs) -> Pipeline:
-    return pipeline([])
+    return Pipeline([
+        node(func=create_embeddings, inputs=['books_loaded'], outputs='books_embedded', name='apply_word_embeddings')
+    ])
