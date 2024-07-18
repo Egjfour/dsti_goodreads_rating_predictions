@@ -14,6 +14,7 @@ data/**
 # except their sub-folders
 !data/**/
 !data/03_primary/book_prices.parquet
+!data/03_primary/open_library_book_api_info.pkl
 
 # also keep all .gitkeep files
 !.gitkeep

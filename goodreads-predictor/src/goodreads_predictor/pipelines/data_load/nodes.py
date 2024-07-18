@@ -3,12 +3,16 @@ This is a boilerplate pipeline 'data_load'
 generated using Kedro 0.19.6
 """
 import re
+import time
 import urllib.parse
-from typing import Tuple
+from typing import Tuple, Dict, List, Any
+from multiprocessing import Pool
+import tqdm
 import json
 import pandas as pd
 import numpy as np
 import requests
+
 
 def copy(data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -240,3 +244,113 @@ def download_huggingface_book_info() -> pd.DataFrame:
     book_descs['goodreads_id'] = [int(re.sub("show/","",re.findall('show/[0-9]+', url)[0])) for url in book_descs['URL']]
     
     return book_descs[['Book', 'Author', 'goodreads_id', 'Description', 'Genres']]
+
+def query_open_library_isbn_to_key(isbn: str) -> Tuple[str]:
+    """
+    Queries the Open Library API to get the key for a book based on its ISBN.
+
+    Args:
+        isbn (str): The ISBN of the book.
+
+    Returns:
+        Tuple[str]: 
+            - The key of the book on the OpenLibrary API if found, otherwise 'Not Found'.
+            - The subjects of the book if found, otherwise an empty list.
+            - The descriptions of the book if found, otherwise an empty list.
+    """
+
+    # Query the Open Library API to get the key for the book
+    response = requests.get(f"https://openlibrary.org/isbn/{isbn}.json", timeout = 10)
+
+    # Convert the response to JSON
+    response_dict = response.json()
+
+    # Check to make sure the response was valid
+    if response_dict.get('error', None) is None:
+        response_id = response_dict.get('works', 'Not Found')
+    else:
+        response_id = 'Not Found'
+
+    final_id = response_id if response_id == 'Not Found' else response_id[0].get('key', 'Not Found')
+    
+    # Do this to capture the subjects or descriptions being included in the ISBN response
+    isbn_subjects = response_dict.get('subjects', [])
+    isbn_descriptions = response_dict.get('description', [])
+
+    return final_id, isbn_subjects, isbn_descriptions
+
+def query_open_library_book_info(openlib_id: str) -> Dict[str, Any]:
+    """
+    Query the Open Library API to get book information.
+
+    Args:
+        openlib_id (str): The Open Library ID for the book.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the book information.
+    """
+    # Query the Open Library API to get the book information
+    response = requests.get(f"https://openlibrary.org{openlib_id}.json", timeout = 10)
+
+    # Check for a valid response and convert to JSON
+    response_dict = response.json()
+
+    return response_dict
+
+def get_open_library_book_data_from_isbn(isbn: str) -> Dict[str, Any]:
+    """
+    Get book data from the Open Library API based on the ISBN.
+
+    Args:
+        isbn (str): The ISBN of the book.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the book data.
+    """
+    try:
+        # Get the Open Library ID for the book
+        openlib_id, isbn_subjects, isbn_descriptions  = query_open_library_isbn_to_key(isbn)
+
+        # Get the book information from the Open Library API
+        book_info = query_open_library_book_info(openlib_id) if openlib_id != 'Not Found' else {'error': 'Not Found'}
+    except requests.exceptions.JSONDecodeError:
+        book_info = {'error': 'JSON Decode Error'}
+        isbn_subjects = []
+        isbn_descriptions = []
+    except Exception as e:
+        book_info = {'error': str(e)}
+        isbn_subjects = []
+        isbn_descriptions = []
+
+    book_info['isbn13'] = isbn
+    book_info['isbn_subjects'] = isbn_subjects
+    book_info['isbn_description'] = isbn_descriptions
+
+    # Sleep for a second to avoid rate limiting
+    time.sleep(1)
+
+    return book_info
+
+def query_open_library_all_books(book_data: pd.DataFrame, all_books: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Queries the Open Library API for information about all the books in the given DataFrame.
+
+    Args:
+        book_data (pd.DataFrame): A DataFrame containing book data, including the 'isbn13' column.
+        all_books (List[Dict[str, Any]]): A list of dictionaries containing information about books obtained from the Open Library API.
+
+    Returns:
+        List[Dict[str, Any]]: A dictionary where the keys are the ISBNs of the books and the values are
+        dictionaries containing information about each book obtained from the Open Library API.
+    """
+    # Identify all the ISBNs in the book data
+    all_isbns = book_data['isbn13'].unique()
+
+    # Filter out books we've already queried
+    all_isbns = [isbn for isbn in all_isbns if isbn not in [x.get('isbn13') for x in all_books]]
+
+    # Iterate through all the isbns and get the information from the Open Library API
+    with Pool(20) as p:
+        new_books_info = list(tqdm.tqdm(p.imap_unordered(get_open_library_book_data_from_isbn, all_isbns), total=len(all_isbns)))
+
+    return all_books + new_books_info
