@@ -13,6 +13,15 @@ books_loaded:
   save_args:
     engine: pyarrow
 
+publisher_consolidation:
+  type: pandas.CSVDataset
+  filepath: abfs://python-ml-labs/03-primary/publisher_consolidation.txt
+  credentials: blob_data
+  load_args:
+    on_bad_lines: warn
+    sep: "\t"
+    encoding: "latin-1"
+
 # The following is in here twice so we can use it as both an input and output to the same node
 price_by_isbn_input:
   type: pandas.ParquetDataset
@@ -26,12 +35,42 @@ price_by_isbn:
   save_args:
     engine: pyarrow
 
-books_embedded:
+title_embeddings_original:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/books_embedded.parquet
+  filepath: data/02_intermediate/book_titles_embedded.parquet
   save_args:
     engine: pyarrow
 
+authors_embeddings:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/author_embeddings.parquet
+  save_args:
+    engine: pyarrow
 
+description_embeddings:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/description_embeddings.parquet
+  save_args:
+    engine: pyarrow
 
+open_library_book_api_info_input:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/open_library_book_api_info.pkl
 
+open_library_book_api_info:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/open_library_book_api_info.pkl
+
+filtered_books:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/filtered_books.parquet
+
+exclusions_summary:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/exclusions_summary.parquet
+
+scope_waterfall_plot:
+  type: plotly.JSONDataset
+  filepath: data/02_intermediate/scope_waterfall_plot.json
+  save_args:
+    engine: auto

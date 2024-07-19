@@ -3,3 +3,11 @@
 #
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.6/configuration/parameters.html
+
+# Columns that we will use for embeddings
+title_column: title
+author_column: authors
+description_column: Description
+
+# Key that will be used for matching
+original_data_key_column: isbn13
