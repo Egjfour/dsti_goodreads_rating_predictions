@@ -43,7 +43,7 @@ def identify_most_common_author_by_isbn(books_input: pd.DataFrame) -> pd.DataFra
         books_input[['isbn13', 'authors']]
         .assign(authors_list = lambda x: x['authors'].str.split('/'))
         .explode('authors_list')
-        .assign(authors_list = lambda x: x['authors_list'].str.strip())
+        .assign(authors_list = lambda x: x['authors_list'].str.replace("\s+", " ").str.strip())
         .groupby('authors_list')
         .agg(
             Ct = ('isbn13', 'nunique')
