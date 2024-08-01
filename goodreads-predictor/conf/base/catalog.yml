@@ -35,6 +35,12 @@ price_by_isbn:
   save_args:
     engine: pyarrow
 
+book_genres:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/book_genres.parquet
+  save_args:
+    engine: pyarrow
+
 title_embeddings_original:
   type: pandas.ParquetDataset
   filepath: data/02_intermediate/book_titles_embedded.parquet
