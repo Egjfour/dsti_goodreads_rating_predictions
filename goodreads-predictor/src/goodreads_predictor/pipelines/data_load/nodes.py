@@ -7,11 +7,13 @@ import time
 import urllib.parse
 from typing import Tuple, Dict, List, Any
 from multiprocessing import Pool
-import tqdm
 import json
+import tqdm
 import pandas as pd
 import numpy as np
 import requests
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
 
 def copy(data: pd.DataFrame) -> pd.DataFrame:
@@ -354,3 +356,75 @@ def query_open_library_all_books(book_data: pd.DataFrame, all_books: List[Dict[s
         new_books_info = list(tqdm.tqdm(p.imap_unordered(get_open_library_book_data_from_isbn, all_isbns), total=len(all_isbns)))
 
     return all_books + new_books_info
+
+def connect_to_mongo() -> MongoClient:
+    uri = "mongodb+srv://goodreads_data_reader:ReadGoodreads@goodreads-data.nyny89y.mongodb.net/?retryWrites=true&w=majority&appName=goodreads-data"
+    # Create a new client and connect to the server
+    client = MongoClient(uri, server_api=ServerApi('1'))
+    # Send a ping to confirm a successful connection
+    try:
+        client.admin.command('ping')
+        print("Pinged your deployment. You successfully connected to MongoDB!")
+    except Exception as e:
+        print(e)
+
+    return client
+
+
+def query_book_genre(books_input: pd.DataFrame) -> pd.DataFrame:
+    """
+    Query the database to retrieve the most frequent genre for each book in the input DataFrame.
+    Database contains JSON records from the metadata fuzzy genres here: https://mengtingwan.github.io/data/goodreads.html
+
+    Args:
+        client (MongoClient): The MongoDB client object used to connect to the database.
+        books_input (pd.DataFrame): The input DataFrame containing book information.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the most frequent genre for each book.
+    """
+    # Connect to the MongoDB client (Kedro has basically no support for document databases. I'm not coding a wrapper around MongoClient for this)
+    client = connect_to_mongo()
+
+    # Calculate an aggregation on the database (filter to only the books we care about since there's an index on book_id)
+    most_frequent_genres_query = (
+        client['goodreads-python-ml-labs']['genres']
+        .aggregate([
+            {
+                '$match': {
+                    'book_id': {"$in": books_input['bookID'].astype(str).values.tolist()}
+                }
+            }, {
+                '$addFields': {
+                    'genres': {
+                        '$objectToArray': '$genres'
+                    }
+                }
+            }, {
+                '$unwind': '$genres'
+            }, {
+                '$sort': {
+                    'genres.v': -1
+                }
+            }, {
+                '$group': {
+                    '_id': '$book_id', 
+                    'most_frequent_genre': {
+                        '$first': '$genres.k'
+                    }
+                }
+            }
+        ])
+    )
+
+    # Capture the records from the query which returns a cursor object
+    match_records = []
+    for record in most_frequent_genres_query:
+        match_records.append(record)
+
+    # Close the connection to the MongoDB client
+    client.close()
+
+    most_frequent_genres = pd.DataFrame(match_records)
+
+    return most_frequent_genres
