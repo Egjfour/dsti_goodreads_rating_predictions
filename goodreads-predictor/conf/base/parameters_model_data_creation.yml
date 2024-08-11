@@ -1,0 +1,13 @@
+# This is a boilerplate parameters config generated for pipeline 'model_data_creation'
+# using Kedro 0.19.6.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.6/configuration/parameters.html
+
+target_col: average_rating
+
+threshold: 15
+is_top_n: True
+is_percentage: False
+
+test_size: 0.3
