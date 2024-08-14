@@ -80,3 +80,19 @@ scope_waterfall_plot:
   filepath: data/02_intermediate/scope_waterfall_plot.json
   save_args:
     engine: auto
+
+factor_lumper:
+  type: pickle.PickleDataset
+  filepath: data/04_feature/factor_lumper.pkl
+
+model_train:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/model_train.parquet
+
+model_valid:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/model_valid.parquet
+
+model_test:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/model_test.parquet

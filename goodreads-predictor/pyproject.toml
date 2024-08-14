@@ -27,7 +27,7 @@ ignore = [ "E501",]
 [project.entry-points."kedro.hooks"]
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term-missing --cov src/goodreads_predictor -ra"
+addopts = "-rf --import-mode=importlib --cov-report term-missing --cov src/goodreads_predictor -ra"
 
 [tool.coverage.report]
 fail_under = 0
