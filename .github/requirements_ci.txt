@@ -4,3 +4,6 @@ kedro==0.19.6
 kedro-datasets==3.0.1
 kedro-telemetry==0.4.0
 kedro-viz==9.1.0
+pytest==7.4.4
+pytest-cov==3.0.0
+pytest-mock==1.13.0
