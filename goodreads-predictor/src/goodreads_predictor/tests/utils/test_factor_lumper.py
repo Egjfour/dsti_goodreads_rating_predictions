@@ -3,7 +3,10 @@ import pytest
 import json
 import pandas as pd
 import numpy as np
-from goodreads_predictor.utils.factor_lumper import FactorLumper #pylint: disable=import-error
+
+import goodreads_predictor.utils as utils
+
+FactorLumper = utils.factor_lumper.FactorLumper
 
 @pytest.fixture
 def simulated_pandas_data():

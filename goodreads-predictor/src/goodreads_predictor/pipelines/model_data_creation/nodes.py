@@ -7,8 +7,10 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import StratifiedShuffleSplit # We want to make sure that we have an adequate amount of each class in the train and test sets
-from goodreads_predictor.utils.factor_lumper import FactorLumper #pylint: disable=import-error
+import goodreads_predictor.utils as utils
 
+
+FactorLumper = utils.factor_lumper.FactorLumper
 # Set a seed to ensure the data split always return the same result
 SEED = 123
 np.random.seed(SEED)
