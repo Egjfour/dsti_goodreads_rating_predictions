@@ -36,8 +36,8 @@ jobs:
           pip install pytest
 
       - name: Install goodreads_predictor package in editable mode
-        working-directory: ./goodreads-predictor
-        run: pip install -e src/
+        # working-directory: ./goodreads-predictor
+        run: pip install -e goodreads-predictor/
 
       - name: Run tests
         working-directory: ./goodreads-predictor
