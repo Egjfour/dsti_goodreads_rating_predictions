@@ -77,7 +77,7 @@ intel-openmp==2021.4.0
 interpret==0.6.2
 interpret-core==0.6.2
 ipykernel==6.29.4
-ipython==8.25.0
+ipython
 isodate==0.6.1
 isoduration==20.11.0
 itsdangerous==2.2.0
