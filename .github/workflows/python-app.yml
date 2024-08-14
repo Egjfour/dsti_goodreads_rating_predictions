@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9  # or your project's Python version
+          python-version: 3.11.9
 
       - name: Cache pip dependencies
         uses: actions/cache@v3
