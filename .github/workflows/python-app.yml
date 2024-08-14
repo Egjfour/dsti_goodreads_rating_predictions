@@ -36,9 +36,10 @@ jobs:
           pip install pytest
 
       - name: Install goodreads_predictor package in editable mode
+        working-directory: ./goodreads-predictor
         run: pip install -e src/
 
       - name: Run tests
-        # working-directory: goodreads-predictor
+        working-directory: ./goodreads-predictor
         run: |
           pytest --maxfail=5 --disable-warnings
