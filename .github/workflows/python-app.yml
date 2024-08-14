@@ -31,7 +31,7 @@ jobs:
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install package to resolve relative imports
-        run: pip install -e src/
+      run: pip install -e src/
     - name: Test with pytest
       working-directory: goodreads-predictor
       run: pytest
