@@ -1,0 +1,6 @@
+pandas==2.2.2
+numpy==1.26.4
+kedro==0.19.6
+kedro-datasets==3.0.1
+kedro-telemetry==0.4.0
+kedro-viz==9.1.0

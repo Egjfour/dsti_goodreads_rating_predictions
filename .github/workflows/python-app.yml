@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r goodreads-predictor/requirements.txt
+          pip install -r .github/requirements_ci.txt
           pip install pytest
 
       - name: Set PYTHONPATH
