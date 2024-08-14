@@ -35,11 +35,10 @@ jobs:
           pip install -r .github/requirements_ci.txt
           pip install pytest
 
-      - name: Set PYTHONPATH
-        run: |
-          echo "PYTHONPATH=$PYTHONPATH:$(pwd)/src" >> $GITHUB_ENV
-          echo "PYTHONPATH set to $(pwd)/src"
+      - name: Install goodreads_predictor package in editable mode
+        run: pip install -e src/
 
       - name: Run tests
+        working_directory: goodreads-predictor
         run: |
           pytest --maxfail=5 --disable-warnings
