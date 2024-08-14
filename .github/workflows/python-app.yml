@@ -39,6 +39,6 @@ jobs:
         run: pip install -e src/
 
       - name: Run tests
-        working_directory: goodreads-predictor
+        # working-directory: goodreads-predictor
         run: |
           pytest --maxfail=5 --disable-warnings
