@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go # For the waterfall plot -- cannot easily do this in matplotlib
 
-def join_data(books: pd.DataFrame, book_descriptions: pd.DataFrame, price_by_isbn: pd.DataFrame) -> pd.DataFrame:
+def join_data(books: pd.DataFrame, book_descriptions: pd.DataFrame, price_by_isbn: pd.DataFrame, book_genres: pd.DataFrame) -> pd.DataFrame:
     """
     Joins the given dataframes based on the 'isbn13' column.
 
@@ -16,6 +16,7 @@ def join_data(books: pd.DataFrame, book_descriptions: pd.DataFrame, price_by_isb
         books (pd.DataFrame): The dataframe containing book data.
         book_descriptions (pd.DataFrame): The dataframe containing book descriptions.
         price_by_isbn (pd.DataFrame): The dataframe containing price data.
+        book_genres (pd.DataFrame): The dataframe containing book genres.
 
     Returns:
         pd.DataFrame: The merged dataframe with added price data and descriptions.
@@ -25,6 +26,11 @@ def join_data(books: pd.DataFrame, book_descriptions: pd.DataFrame, price_by_isb
 
     # Add in the descriptions
     books = books.merge(book_descriptions, on='isbn13', how='left', validate="1:1")
+
+    # Add in the genres (Merge is on the Goodreads Book ID -- This will make it more difficult to do inference later on new books outside Goodreads)
+    books['bookID'] = books['bookID'].astype(str)
+    books = books.merge(book_genres, left_on='bookID', right_on = '_id', how='left').rename(columns={"most_frequent_genre": "genre"})
+    books['genre'] = books['genre'].fillna('no genre information')
 
     return books
 
@@ -107,6 +113,7 @@ def consolidate_duplicated_titles(data: pd.DataFrame) -> pd.DataFrame:
             'Price': g[g['Price'] > 0]['Price'].mean(),
             'language_code': g['language_code'].mode().values[0],
             'Description': g['LongestDescription'].values[0],
+            'genre': g['genre'].mode().values[0],
         }), include_groups = False)
         .assign(Price = lambda x: x['Price'].fillna(-999))
         .reset_index(drop = False)
@@ -197,6 +204,16 @@ def create_data_filters(input_df: pd.DataFrame) -> pd.DataFrame:
      'data_filter_reason'] = f'{filt_num} - High Rating Outlier'
     filt_num += 1
 
+    # No Genre
+    input_df.loc[(input_df['genre'] == 'no genre information') & (input_df['data_filter_reason'] == 'Start - No Filter'),
+                 'data_filter_reason'] = f'{filt_num} - No Genre Data'
+    filt_num += 1
+
+    # No description
+    input_df.loc[(input_df['Description'] == 'no description found') & (input_df['data_filter_reason'] == 'Start - No Filter'),
+                 'data_filter_reason'] = f'{filt_num} - No Description'
+    filt_num += 1
+
     # Duplicated titles
     input_df = (
         input_df
@@ -210,11 +227,6 @@ def create_data_filters(input_df: pd.DataFrame) -> pd.DataFrame:
     )
     input_df.loc[(input_df['non_duplicate'] == False) & (input_df['data_filter_reason'] == 'Start - No Filter'),
                   'data_filter_reason'] = f'{filt_num} - Duplicate Title'
-    filt_num += 1
-
-    # No description
-    input_df.loc[(input_df['Description'] == 'no description found') & (input_df['data_filter_reason'] == 'Start - No Filter'),
-                 'data_filter_reason'] = f'{filt_num} - No Description'
     filt_num += 1
 
     # Final data -- what's not filtered (we want this to be last for the waterfall chart)
