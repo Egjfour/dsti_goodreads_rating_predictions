@@ -18,7 +18,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
         node(func = create_descriptions_lookup, inputs=['open_library_book_api_info'],
              outputs='descriptions_lookup', name='create_descriptions_lookup'),
-        node(func = join_data, inputs=['books_loaded', 'descriptions_lookup', 'price_by_isbn'],
+        node(func = join_data, inputs=['books_loaded', 'descriptions_lookup', 'price_by_isbn', 'book_genres'],
              outputs='joined_data', name='join_book_data'),
         node(func = create_data_filters, inputs=['joined_data'], outputs='books_filters', name='create_data_filters'),
         node(func = apply_filters_and_consolidate, inputs=['books_filters'],
