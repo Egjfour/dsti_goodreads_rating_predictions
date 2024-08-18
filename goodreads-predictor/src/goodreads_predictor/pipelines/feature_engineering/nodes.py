@@ -32,7 +32,7 @@ def cut_variable_count_by_mean_counts(input_df: pd.DataFrame, column: str, mappi
     output_array = np.where(count_data['count'] < mean_count, mapping[0], np.where(count_data['count'] < mean_count_no_1, mapping[1], mapping[2]))
     count_data[bin_col_name] = output_array
 
-    return count_data, mean_count, mean_count_no_1
+    return count_data.drop(columns = 'count'), mean_count, mean_count_no_1
 
 def calculate_author_fame_levels(data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -214,7 +214,9 @@ def apply_book_attributes(input_df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[st
     
     # Create author and publisher lookup tables with the information at that level of granularity
     author_metrics = author_fame_levels.merge(author_book_counts, left_index=True, right_index=True)
-    publisher_metrics = publisher_price_categories.merge(publisher_book_counts, left_index=True, right_index=True)
+    publisher_metrics = publisher_book_counts.merge(publisher_price_categories, left_index=True, right_index=True, how='left')
+    publisher_metrics.drop(columns='MedianPrice', inplace=True)
+    publisher_metrics['PublisherPriceCategory'] = publisher_metrics['PublisherPriceCategory'].fillna("Unknown")
 
     # Merge the data with the calculated metrics to the original data
     output_df = (
