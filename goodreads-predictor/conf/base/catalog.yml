@@ -81,6 +81,14 @@ scope_waterfall_plot:
   save_args:
     engine: auto
 
+books_features:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/books_features.parquet
+
+feature_cutoffs:
+  type: json.JSONDataset
+  filepath: data/04_feature/feature_cutoffs.json
+
 factor_lumper:
   type: pickle.PickleDataset
   filepath: data/04_feature/factor_lumper.pkl
