@@ -2,7 +2,7 @@
 This is a boilerplate pipeline 'feature_engineering'
 generated using Kedro 0.19.6
 """
-from typing import Tuple, List, Union, Dict, Any
+from typing_extensions import Tuple, List, Union, Dict, Any
 import pandas as pd
 import numpy as np
 
@@ -64,7 +64,7 @@ def calculate_author_fame_levels(data: pd.DataFrame) -> pd.DataFrame:
         .sort_values("TotalReviews", ascending=False)
 
         # Get quantiles of the total review count (list comprehension to repeat the quantiles for each author)
-        .assign(QuantileReviews = lambda x: [x['TotalReviews'].quantile([0, 0.15, 0.25, 0.5, 0.75, 0.95]).values.tolist() for _ in range(len(x))])
+        .assign(QuantileReviews = lambda x: x['TotalReviews'].quantile([0, 0.15, 0.25, 0.5, 0.75, 0.95]).values.repeat(len(x)).reshape(-1, len(x)).T.tolist())
 
         # Explode the quantiles to get one row per quantile then sort by quantile
         .explode("QuantileReviews")
