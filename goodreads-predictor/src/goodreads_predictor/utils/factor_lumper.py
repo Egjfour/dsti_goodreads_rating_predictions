@@ -2,7 +2,7 @@
 FactorLumper class which will be used to transform categorical attributes
 by lumping together levels that are infrequently occuring within the dataset
 """
-from typing import Union, Self, Dict, List
+from typing_extensions import Union, Self, Dict, List
 import json
 import pandas as pd
 import numpy as np

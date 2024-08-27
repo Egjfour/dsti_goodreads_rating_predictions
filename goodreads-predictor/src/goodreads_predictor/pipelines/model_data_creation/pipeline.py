@@ -17,7 +17,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         ),
         node(
             func=create_train_test_split,
-            inputs=["filtered_books", "params:target_col", "params:test_size"],
+            inputs=["books_features", "params:target_col", "params:test_size"],
             outputs=["train_raw", "valid_raw", "test_raw"],
             name = "create_train_test_split"
         ),

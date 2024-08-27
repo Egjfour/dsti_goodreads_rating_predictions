@@ -91,7 +91,8 @@ def consolidate_duplicated_titles(data: pd.DataFrame) -> pd.DataFrame:
         .sort_values('DescriptionLength', ascending = False)
         .groupby('title')
         .agg(
-            LongestDescription = ('Description', 'first')
+            LongestDescription = ('Description', 'first'),
+            DescriptionISBN = ('isbn13', 'first') # Need this to match the book description embeddings
         )
     )
 
@@ -113,6 +114,7 @@ def consolidate_duplicated_titles(data: pd.DataFrame) -> pd.DataFrame:
             'Price': g[g['Price'] > 0]['Price'].mean(),
             'language_code': g['language_code'].mode().values[0],
             'Description': g['LongestDescription'].values[0],
+            'DescriptionISBN': g['DescriptionISBN'].values[0],
             'genre': g['genre'].mode().values[0],
         }), include_groups = False)
         .assign(Price = lambda x: x['Price'].fillna(-999))
