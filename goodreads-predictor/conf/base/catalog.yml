@@ -104,3 +104,21 @@ model_valid:
 model_test:
   type: pandas.ParquetDataset
   filepath: data/05_model_input/model_test.parquet
+
+flaml_model_trained:
+  type: pickle.PickleDataset
+  filepath: data/06_models/flaml_model.pkl
+
+flaml_model_test_results:
+  type: pandas.ParquetDataset
+  filepath: data/07_model_outputs/flaml_model_test_results.parquet
+
+flaml_regressor_scatterplot:
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/flaml_regressor_scatterplot.png
+  save_args:
+    format: png
+
+all_model_results:
+  type: pandas.ParquetDataset
+  filepath: data/08_reporting/all_model_results.parquet

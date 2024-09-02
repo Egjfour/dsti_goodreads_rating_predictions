@@ -1,0 +1,15 @@
+# This is a boilerplate parameters config generated for pipeline 'flaml_model'
+# using Kedro 0.19.6.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.6/configuration/parameters.html
+FEATURES: ['most_common_author', 'publisher', 'language_code', 'num_pages', 'ratings_count', 'text_reviews_count', 'Price', 'genre',
+           'AuthorFameLevel', 'book_count_category', 'publisher_book_count_category', 'PublisherPriceCategory', 'book_length_category', 'engagement_level']
+TARGET: 'average_rating'
+
+# Parameters for the model
+model_config:
+  time_budget: 180
+  metric: 'r2'
+  task: 'regression'
+  estimator_list: ['lgbm', 'xgb_limitdepth']
