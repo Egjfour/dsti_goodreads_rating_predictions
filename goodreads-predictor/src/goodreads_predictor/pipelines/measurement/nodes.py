@@ -19,6 +19,10 @@ def report_model_metrics(experiment_names: List[str], *experiments) -> pd.DataFr
     Returns:
         pd.DataFrame: A DataFrame containing the desired model metrics for all the experiments.
     """
+    # Check to make sure we have a name for each experiment passed
+    if len(experiment_names) != len(experiments):
+        raise ValueError("Number of experiment names parameter must match the number of experiments passed.")
+    
     all_results = pd.DataFrame()
     for results, name in zip(experiments, experiment_names):
         actual = results["Actual"]
