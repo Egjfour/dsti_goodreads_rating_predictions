@@ -250,8 +250,6 @@ def merge_description_embeddings(output_df: pd.DataFrame, description_embeddings
     Returns:
         pd.DataFrame: The merged DataFrame.
     """
-    # Load the description embeddings
-    description_embeddings = catalog.load('description_embeddings')
     # Merge the description embeddings with the output DataFrame
     merged_df = pd.merge(output_df, description_embeddings, on='isbn13')
     return merged_df
@@ -280,6 +278,8 @@ def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -
     # Add the reduced dimensions to the DataFrame for visualization
     merged_df['UMAP1'] = reduced_embeddings[:, 0]
     merged_df['UMAP2'] = reduced_embeddings[:, 1]
+
+    
 
 
     return merged_df
