@@ -284,16 +284,4 @@ def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -
 
     return merged_df
 
-# Define the isClassic Function
-def isClassic(merged_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Creates a new column 'isClassic' in the DataFrame that indicates whether a book is considered classic or not.
-    
-    Args:
-        merged_df (pd.DataFrame): The input DataFrame containing the 'cluster' column.
-    
-    Returns:
-        pd.DataFrame: The DataFrame with the new 'isClassic' column added.
-    """
-    merged_df['isClassic'] = (merged_df['cluster'] == 8).astype(int)
-    return merged_df
+
