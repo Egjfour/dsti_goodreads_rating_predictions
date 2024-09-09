@@ -5,13 +5,10 @@ generated using Kedro 0.19.6
 from typing_extensions import Tuple, List, Union, Dict, Any
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 import umap.umap_ as umap
-from wordcloud import WordCloud
+
 
 def cut_variable_count_by_mean_counts(input_df: pd.DataFrame, column: str, mapping = List[str], bin_col_name: str = 'binned') -> Tuple[pd.DataFrame, float, float]:
     """
@@ -251,7 +248,7 @@ def merge_description_embeddings(output_df: pd.DataFrame, description_embeddings
         pd.DataFrame: The merged DataFrame.
     """
     # Merge the description embeddings with the output DataFrame
-    merged_df = pd.merge(output_df, description_embeddings, on='isbn13')
+    merged_df = pd.merge(output_df, description_embeddings, on='DescriptionISBN')
     return merged_df
 
 # Define the function to perform clustering analysis
@@ -279,7 +276,7 @@ def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -
     merged_df['UMAP1'] = reduced_embeddings[:, 0]
     merged_df['UMAP2'] = reduced_embeddings[:, 1]
 
-    
+
 
 
     return merged_df
