@@ -5,6 +5,10 @@ generated using Kedro 0.19.6
 from typing_extensions import Tuple, List, Union, Dict, Any
 import pandas as pd
 import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+import umap.umap_ as umap
+
 
 def cut_variable_count_by_mean_counts(input_df: pd.DataFrame, column: str, mapping = List[str], bin_col_name: str = 'binned') -> Tuple[pd.DataFrame, float, float]:
     """
@@ -231,3 +235,47 @@ def apply_book_attributes(input_df: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[st
     output_df['language_code'] = consolidated_language_codes
 
     return output_df, cutoff_dict
+
+# Defin ethe function to merge the output_df with the description embedding from catalog
+def merge_description_embeddings(output_df: pd.DataFrame, description_embeddings: pd.DataFrame) -> pd.DataFrame:
+    """
+    Merge the description embeddings with the output DataFrame.
+    Args:
+        output_df (pd.DataFrame): The output DataFrame.
+        description_embeddings (pd.DataFrame): The description embeddings DataFrame.
+
+    Returns:
+        pd.DataFrame: The merged DataFrame.
+    """
+    # Merge the description embeddings with the output DataFrame
+    merged_df = pd.merge(output_df, description_embeddings, left_on='DescriptionISBN', right_on='isbn13')
+    return merged_df
+
+# Define the function to perform clustering analysis
+
+def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -> pd.DataFrame:
+    # Convert the 'description_embedding' column to a numpy array if it's not already
+    embeddings = np.vstack(merged_df['Description_embedding'].values)
+
+    # Flatten the embeddings to 1D
+    embeddings = embeddings.reshape(embeddings.shape[0], -1)
+
+    # Lower the dimension of the description_embedding column using UMAP
+    umap_model = umap.UMAP(n_components=2, random_state=42)  # Use 2 components for better visualization
+    reduced_embeddings = umap_model.fit_transform(embeddings)
+
+    # Perform KMeans clustering on the reduced embeddings
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    merged_df['cluster'] = kmeans.fit_predict(reduced_embeddings)
+
+    # Calculate the silhouette score
+    silhouette_avg = silhouette_score(reduced_embeddings, kmeans.labels_)
+    print("Silhouette Score:", silhouette_avg)
+
+    # Add the reduced dimensions to the DataFrame for visualization
+    merged_df['UMAP1'] = reduced_embeddings[:, 0]
+    merged_df['UMAP2'] = reduced_embeddings[:, 1]
+
+    return merged_df
+
+
