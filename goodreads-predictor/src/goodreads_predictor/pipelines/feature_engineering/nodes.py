@@ -276,6 +276,9 @@ def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -
     merged_df['UMAP1'] = reduced_embeddings[:, 0]
     merged_df['UMAP2'] = reduced_embeddings[:, 1]
 
+    # Drop the original 'description_embedding' column
+    merged_df.drop(columns=['Description_embedding'], inplace=True)
+
     return merged_df
 
 
