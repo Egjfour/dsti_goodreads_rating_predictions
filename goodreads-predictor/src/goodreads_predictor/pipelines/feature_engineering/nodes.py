@@ -248,7 +248,7 @@ def merge_description_embeddings(output_df: pd.DataFrame, description_embeddings
         pd.DataFrame: The merged DataFrame.
     """
     # Merge the description embeddings with the output DataFrame
-    merged_df = pd.merge(output_df, description_embeddings, on='DescriptionISBN')
+    merged_df = pd.merge(output_df, description_embeddings, left_on='DescriptionISBN', right_on='isbn13')
     return merged_df
 
 # Define the function to perform clustering analysis
@@ -275,9 +275,6 @@ def perform_clustering_analysis(merged_df: pd.DataFrame, n_clusters: int = 10) -
     # Add the reduced dimensions to the DataFrame for visualization
     merged_df['UMAP1'] = reduced_embeddings[:, 0]
     merged_df['UMAP2'] = reduced_embeddings[:, 1]
-
-
-
 
     return merged_df
 
