@@ -1,0 +1,11 @@
+1_model:
+  type: BayesianRidge
+  hyperparameters:
+    alpha_1: 7.672290184186796e-05
+    alpha_2: 0.0009116510241437176
+    alpha_init: 2.8331716611212512e-05
+    lambda_1: 0.017918568349691386
+    lambda_2: 0.0770500450348967
+    lambda_init: 0.0051699973172927354
+    tol: 5.937281208438848
+best_score: 0.19762387003687557
