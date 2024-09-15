@@ -42,10 +42,10 @@ def create_train_test_split(data: pd.DataFrame, target_col: str, test_size: floa
     Returns:
         tuple: A tuple containing train and test DataFrames.
     """
-    if not isinstance(data[target_col][0], str):
-        data['stratify_col'] = data[target_col] > data[target_col].median()
-    else:
+    if data[target_col].dtype.name == 'category' or data[target_col].dtype == 'object': # Handle categorical or object data types
         data['stratify_col'] = data[target_col]
+    else:
+        data['stratify_col'] = data[target_col] > data[target_col].median()
 
     # Split the data into train and test sets
     splitter = StratifiedShuffleSplit(n_splits=1, test_size=test_size, random_state=SEED)
