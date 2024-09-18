@@ -57,7 +57,6 @@ def train_and_predict_models(train_data: pd.DataFrame, test_data: pd.DataFrame, 
   # Train models
     bayesian_model = train_bayesian_ridge(X_train, y_train, config['bayesian_params'], config['cv'])
     ridge_model = train_ridge(X_train, y_train, config['ridge_params'], config['cv'])
-    # Train other models...
 
     # Make predictions
     bayesian_preds = predict_bayesian_ridge(bayesian_model, X_test)
@@ -67,7 +66,6 @@ def train_and_predict_models(train_data: pd.DataFrame, test_data: pd.DataFrame, 
         "Actual": y_test,
         "BayesianRidge_Predicted": bayesian_preds,
         "Ridge_Predicted": ridge_preds
-        # Add predictions from other models...
     })
 
     return results
