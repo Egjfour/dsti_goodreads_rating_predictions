@@ -11,8 +11,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=train_and_predict_models,
-                inputs=["train_data", "test_data", "params:features", "params:target", "params:model_config"],
-                outputs="model_predictions",
+                inputs=["model_train", "model_test", "params:features_reg_mdl", "params:target_reg_mdl", "params:model_config_reg_mdl"],
+                outputs=["model_predictions_bayesian_ridge", "model_predictions_ridge"],
                 name="train_and_predict_models_node",
             ),
         ]
