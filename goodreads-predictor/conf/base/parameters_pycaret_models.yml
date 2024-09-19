@@ -3,3 +3,20 @@
 #
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.6/configuration/parameters.html
+features_reg_mdl: ['most_common_author', 'publisher', 'AuthorFameLevel', 'book_length_category', 'genre', 'Price', 'cluster', 'engagement_level']
+
+target_reg_mdl: 'average_rating'
+
+model_config_reg_mdl:
+    bayesian_params:
+        alpha_1: loguniform(1e-5, 1e5)
+        alpha_2: loguniform(1e-5, 1e5)
+        lambda_1: loguniform(1e-5, 1e5)
+        lambda_2: loguniform(1e-5, 1e5)
+        alpha_init: loguniform(1e-5, 1e5)
+        lambda_init: loguniform(1e-5, 1e5)
+        tol: loguniform(1e-10, 1e3)
+    cv: RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+    ridge_params:
+        alpha: [0.01, 0.1, 1, 10, 100]
+        fit_intercept: [True, False]
