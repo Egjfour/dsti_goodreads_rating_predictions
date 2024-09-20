@@ -20,10 +20,10 @@ pip install -r requirements.txt
 
 Additionally, the main input dataset is not provided in this repo. You will either need to as for a credentials file from one of the project owners (see contact details below) or you will need to store a copy of the books.csv file in the data/01_raw/ directory and repoint the [catalog entry](conf/base/catalog.yml) to the local file.
 
-##### Project Owner Contact
-Eddie Jenkins: eddie.jenkins@edu.dsti.institute
-Ilyes Azouani: ilyes.azouani@edu.dsti.institute
-Ismail Ben Alexander: ismail.ben-abdelkader@edu.dsti.institute
+### Project Owner Contact
+- Eddie Jenkins: eddie.jenkins@edu.dsti.institute
+- Ilyes Azouani: ilyes.azouani@edu.dsti.institute
+- Ismail Ben Alexander: ismail.ben-abdelkader@edu.dsti.institute
 
 ## Running the Kedro Project
 
