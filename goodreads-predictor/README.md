@@ -14,7 +14,7 @@ Dependencies are all declared in the requirements.txt file
 
 To install them, run:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -24,7 +24,7 @@ Additionally, the main input dataset is not provided in this repo. You will eith
 
 You can run this Kedro project from the terminal with:
 
-```
+```bash
 kedro run
 ```
 
@@ -34,7 +34,7 @@ Tests can be viewed in the [tests folder](src/goodreads_predictor/tests/).
 
 Tests can be run using the following command which will also show a coverage report.
 
-```
+```bash
 pytest
 ```
 
