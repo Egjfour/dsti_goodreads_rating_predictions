@@ -27,7 +27,7 @@ def train_model(train_data: pd.DataFrame, valid_data: pd.DataFrame, features: Li
     y_valid = valid_data[target]
 
     automl = AutoML()
-    automl.fit(X_train, y_train, X_val = X_valid, y_val = y_valid, **config, verbose = -1)
+    automl.fit(X_train, y_train, X_val = X_valid, y_val = y_valid, **config, verbose = -1, seed=123)
 
     return automl
 
