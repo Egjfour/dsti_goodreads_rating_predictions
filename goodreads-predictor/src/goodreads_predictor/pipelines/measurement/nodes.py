@@ -4,7 +4,7 @@ generated using Kedro 0.19.6
 """
 from typing import List
 import pandas as pd
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, root_mean_squared_error
 import matplotlib.pyplot as plt
 
 def report_model_metrics(experiment_names: List[str], *experiments) -> pd.DataFrame:
@@ -28,7 +28,7 @@ def report_model_metrics(experiment_names: List[str], *experiments) -> pd.DataFr
         actual = results["Actual"]
         predicted = results["Predicted"]
         mse = mean_squared_error(actual, predicted)
-        rmse = mean_squared_error(actual, predicted, squared=False)
+        rmse = root_mean_squared_error(actual, predicted)
         mae = mean_absolute_error(actual, predicted)
         r2 = r2_score(actual, predicted)
         results = pd.DataFrame({"Experiment": [name], "MSE": [mse], "RMSE": [rmse], "MAE": [mae], "R2": [r2]})
