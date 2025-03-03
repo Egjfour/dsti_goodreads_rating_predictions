@@ -23,7 +23,7 @@ Additionally, the main input dataset is not provided in this repo. You will eith
 ### Project Owner Contact
 - Eddie Jenkins: eddie.jenkins@edu.dsti.institute
 - Ilyes Azouani: ilyes.azouani@edu.dsti.institute
-- Ismail Ben Alexander: ismail.ben-abdelkader@edu.dsti.institute
+- Ismail Ben Abdelkader: ismail.ben-abdelkader@edu.dsti.institute
 
 ## Running the Kedro Project
 
